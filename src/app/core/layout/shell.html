@@ -1,0 +1,68 @@
+<div
+  class="shell"
+  [class.shell--collapsed]="isCollapsed()"
+  [class.shell--menu-open]="menuOpen()"
+>
+  <aside class="shell__sidebar">
+    <img class="shell__decor" src="images/sidebar-decor.png" alt="" width="591" height="591" />
+    <div class="shell__brand">
+      <img src="images/app-logo.png" alt="" width="40" height="40" />
+      <span class="shell__brand-name">Angular Base</span>
+    </div>
+    <vto-menubar
+      class="shell__menu"
+      ariaLabel="Điều hướng chính"
+      [groups]="groups"
+      [activeId]="activeId()"
+      [tooltip]="isCollapsed()"
+      (itemSelect)="navigate($event)"
+    />
+  </aside>
+
+  <div class="shell__backdrop" aria-hidden="true" (click)="closeMenu()"></div>
+
+  <div class="shell__main" [inert]="menuOpen()">
+    <header class="shell__header">
+      <div class="shell__lead">
+        <span class="shell__action">
+          <vto-button
+            appearance="text"
+            sizeMode="small"
+            [symbol]="toggleSymbol()"
+            [attr.title]="toggleLabel()"
+            (clicked)="toggleMenu()"
+          />
+        </span>
+        <vto-input
+          class="shell__search"
+          type="search"
+          labelMode="none"
+          placeholder="Tìm kiếm"
+          prefixSymbol="search"
+          [attr.aria-label]="'Tìm kiếm'"
+        />
+      </div>
+
+      <div class="shell__actions">
+        <span class="shell__action">
+          <vto-button appearance="text" sizeMode="small" symbol="notifications" [attr.title]="'Thông báo'" />
+          @if (unreadCount()) {
+            <span class="shell__badge" aria-hidden="true">{{ unreadCount() }}</span>
+          }
+        </span>
+        <span class="shell__action">
+          <vto-button appearance="text" sizeMode="small" symbol="apps" [attr.title]="'Ứng dụng'" />
+        </span>
+        <img class="shell__avatar" src="images/avatar.png" alt="Tài khoản" width="40" height="40" />
+      </div>
+    </header>
+
+    <main class="shell__content">
+      <div class="shell__body">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+</div>
+
+<vto-toast position="top-right" />

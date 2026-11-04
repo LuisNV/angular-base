@@ -1,0 +1,254 @@
+:host {
+  display: block;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: 256px minmax(0, 1fr);
+  height: 100dvh;
+  overflow: hidden;
+  background: linear-gradient(180deg, #f6f3fd 0%, #f3f6ff 50%, #eff8ff 100%);
+  // Both states keep two tracks, otherwise the browser cannot interpolate the width
+  transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &--collapsed {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  &__sidebar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 8px;
+    overflow: hidden;
+  }
+
+  // Hình trang trí mờ ở góc dưới sidebar (Figma: 591x591, x=-295, y=603, opacity 10%)
+  &__decor {
+    position: absolute;
+    bottom: -114px;
+    left: -295px;
+    width: 591px;
+    height: 591px;
+    object-fit: cover;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  &__brand {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 66px;
+    padding-inline: 8px;
+    overflow: hidden;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -0.32px;
+    white-space: nowrap;
+    color: #001946;
+
+    img {
+      flex: none;
+      object-fit: cover;
+    }
+  }
+
+  &__brand-name {
+    overflow: hidden;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &__menu {
+    position: relative;
+    --p-vto-menubar-width: 100%;
+    --p-vto-menubar-padding: 0;
+    --p-vto-menubar-background: transparent;
+    // With no padding, the container's rounded clip would cut the first and last items' corners
+    --p-vto-menubar-border-radius: 0;
+
+    ::ng-deep .vto-menubar__label {
+      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+
+  // Labels fade while the sidebar narrows; the item clips whatever text is left
+  &--collapsed &__brand-name,
+  &--collapsed &__menu ::ng-deep .vto-menubar__label {
+    opacity: 0;
+  }
+
+  &__backdrop {
+    display: none;
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  &__header {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 70px;
+    padding-inline: clamp(12px, 2.5vw, 16px);
+  }
+
+  &__lead {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  &__search {
+    flex: 0 1 350px;
+    min-width: 0;
+
+    ::ng-deep .p-inputtext {
+      width: 100%;
+      min-width: 0;
+      height: 40px;
+      border-color: transparent;
+      border-radius: 12px;
+      background: #ffffff;
+      font-size: 16px;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__action {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    border-radius: 12px;
+    background: #ffffff;
+  }
+
+  &__badge {
+    position: absolute;
+    top: 4px;
+    left: calc(50% + 8px);
+    min-width: 16px;
+    max-width: 34px;
+    padding-inline: 4px;
+    border-radius: 100px;
+    background: #e7000b;
+    color: #fef2f2;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  &__avatar {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  // Spacing scales with the viewport instead of jumping at breakpoints
+  &__content {
+    flex: 1;
+    min-height: 0;
+    padding: 10px clamp(8px, 1.2vw, 16px) clamp(8px, 1.2vw, 16px);
+  }
+
+  &__body {
+    height: 100%;
+    padding: clamp(12px, 1.2vw, 16px);
+    overflow: auto;
+    overscroll-behavior: contain;
+    border-radius: clamp(12px, 1.2vw, 16px);
+    background: #ffffff;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  // Off-canvas drawer stays in the DOM so it can slide both in and out
+  .shell__sidebar {
+    position: fixed;
+    inset-block: 0;
+    left: 0;
+    z-index: 1001;
+    width: min(280px, 85vw);
+    background: linear-gradient(180deg, #f6f3fd 0%, #f3f6ff 50%, #eff8ff 100%);
+    transform: translateX(-100%);
+    visibility: hidden;
+    // visibility flips at the end of the slide-out, so the closing motion stays visible
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0.3s;
+  }
+
+  .shell--menu-open .shell__sidebar {
+    transform: none;
+    visibility: visible;
+    box-shadow: 0 16px 48px rgba(0, 25, 70, 0.24);
+  }
+
+  .shell__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: block;
+    background: rgba(0, 25, 70, 0.32);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0.3s;
+  }
+
+  .shell--menu-open .shell__backdrop {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .shell__header {
+    gap: 8px;
+    height: 60px;
+  }
+
+  .shell__lead {
+    gap: 8px;
+  }
+
+  .shell__content {
+    padding-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell,
+  .shell__sidebar,
+  .shell__backdrop,
+  .shell__brand-name,
+  .shell__menu ::ng-deep .vto-menubar__label {
+    transition: none;
+  }
+}

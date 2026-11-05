@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { VtoButton } from '@vietinbank/vietinone-ui';
-import { NotifyService } from '../../core/services/notify.service';
+import { NotifyService } from '../../../../../core/services/notify.service';
 
 @Component({
   selector: 'app-home',

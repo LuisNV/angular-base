@@ -1,0 +1,68 @@
+<main class="login-page">
+  <section class="login-card" aria-labelledby="login-title">
+    <aside class="illustration" aria-label="Giới thiệu Ting Ting CMS">
+      <img src="images/tingting_login_left.png"
+        alt="Quản trị ứng dụng học tiếng Trung Ting Ting. Quản lý khóa học, bài học, nội dung, người dùng và hệ thống. Gấu trúc học cùng máy tính." />
+    </aside>
+
+    <div class="login-content">
+      <header class="brand">
+        <div class="brand-icon" aria-hidden="true"></div>
+        <h1 id="login-title">Ting Ting </h1>
+        <p>Nền tảng học tiếng trung</p>
+      </header>
+
+      <form (submit)="$event.preventDefault(); submit(identifier.value, password.value)" [attr.aria-busy]="loading()">
+        <div class="field">
+          <label for="identifier">Email hoặc tên đăng nhập</label>
+          <div class="input-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+              aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+              <path d="m3 6 9 7 9-7" />
+            </svg>
+            <input #identifier id="identifier" name="identifier" autocomplete="username"
+              placeholder="Nhập email hoặc tên đăng nhập" required [readOnly]="loading()" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="password">Mật khẩu</label>
+          <div class="input-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+              aria-hidden="true">
+              <rect x="5" y="10" width="14" height="11" rx="2" />
+              <path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3" />
+            </svg>
+            <input #password id="password" name="password" [type]="showPassword() ? 'text' : 'password'"
+              autocomplete="current-password" placeholder="Nhập mật khẩu" required [readOnly]="loading()" />
+            <button class="password-toggle" type="button" (click)="showPassword.set(!showPassword())"
+              [attr.aria-label]="showPassword() ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'" [attr.aria-pressed]="showPassword()"
+              aria-controls="password">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                <circle cx="12" cy="12" r="3" />
+                @if (!showPassword()) {
+                <path d="m3 3 18 18" />
+                }
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="remember"><input #remember type="checkbox" name="remember" [checked]="rememberMe()"
+              (change)="rememberMe.set(remember.checked)" aria-describedby="remember-note" />
+            <span>Ghi nhớ đăng nhập</span></label>
+          <button class="forgot-password" type="button" (click)="showHelp.set(!showHelp())"
+            [attr.aria-expanded]="showHelp()" aria-controls="password-help">
+            Quên mật khẩu?
+          </button>
+        </div>
+        <button class="submit-button" type="submit" [disabled]="loading()">
+          {{ loading() ? 'Đang đăng nhập…' : 'Đăng nhập' }}
+        </button>
+      </form>
+    </div>
+  </section>
+</main>

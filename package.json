@@ -8,7 +8,12 @@
     "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "format": "prettier --write \"src/**/*.{ts,html,scss,json}\""
+    "format": "prettier --write \"src/**/*.{ts,html,scss,json}\"",
+    "start:dev": "ng serve --configuration development",
+    "start:uat": "ng serve --configuration uat",
+    "start:prod": "ng serve --configuration production",
+    "build:dev": "ng build --configuration development",
+    "build:uat": "ng build --configuration uat"
   },
   "private": true,
   "dependencies": {

@@ -61,6 +61,27 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ]
+            },
+            "uat": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2MB",
+                  "maximumError": "3MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.uat.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -73,6 +94,9 @@
             },
             "development": {
               "buildTarget": "angular-base:build:development"
+            },
+            "uat": {
+              "buildTarget": "angular-base:build:uat"
             }
           },
           "defaultConfiguration": "development"

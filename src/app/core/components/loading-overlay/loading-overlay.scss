@@ -1,0 +1,32 @@
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgb(235 243 255 / 70%);
+  backdrop-filter: blur(5px);
+  cursor: wait;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+.loading-ring {
+  width: 56px;
+  height: 56px;
+  border: 4px solid #dce7fc;
+  border-top-color: #075cff;
+  border-right-color: #8cb7ff;
+  border-radius: 50%;
+  animation: loading-spin 1s linear infinite;
+}
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loading-ring {
+    animation: none;
+  }
+}

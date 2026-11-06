@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { provideAuth } from './features/auth/auth.providers';
+import { provideProfile } from './features/profile/profile.providers';
 import { Shell } from './core/layout/shell';
 import { authGuard } from './core/guards/auth.guard';
 
@@ -22,6 +23,13 @@ export const routes: Routes = [
         title: 'Trang chủ',
         loadComponent: () =>
           import('./features/home/presentation/pages/home/home').then((m) => m.Home),
+      },
+      {
+        path: 'profile',
+        title: 'Hồ sơ',
+        providers: provideProfile(),
+        loadComponent: () =>
+          import('./features/profile/presentation/pages/profile/profile').then((m) => m.Profile),
       },
       {
         path: '**',

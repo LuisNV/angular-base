@@ -12,7 +12,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
-import { VtoButton, VtoInput, VtoMenubar, VtoMenubarItem, VtoToast } from '@vietinbank/vietinone-ui';
+import { VtoButton, VtoMenubarItem, VtoToast } from '@vietinbank/vietinone-ui';
 import { NotifyService } from '../services/notify.service';
 import { NAVIGATION } from './navigation';
 
@@ -22,7 +22,7 @@ const COLLAPSED_SIDEBAR_QUERY = '(max-width: 1279.98px)';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, VtoButton, VtoInput, VtoMenubar, VtoToast],
+  imports: [RouterOutlet, VtoButton, VtoToast],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +35,12 @@ export class Shell {
 
   protected readonly groups = NAVIGATION;
   protected readonly unreadCount = signal(0);
+  protected readonly searchQuery = signal('');
+
+  protected openSearchResult(): void {
+    this.searchQuery.set('');
+    this.router.navigate(['/home']);
+  }
 
   // Mobile shows the menu as a drawer; larger screens dock it and can collapse it to icons
   protected readonly isMobile = signal(this.breakpoints.isMatched(MOBILE_QUERY));
@@ -46,7 +52,9 @@ export class Shell {
   // The toggle shows what the next click does: open the menu, or collapse the expanded sidebar
   private readonly canOpenMenu = computed(() => this.isMobile() || this.sidebarCollapsed());
   protected readonly toggleSymbol = computed(() => (this.canOpenMenu() ? 'menu' : 'menu_open'));
-  protected readonly toggleLabel = computed(() => (this.canOpenMenu() ? 'Mở menu' : 'Thu gọn menu'));
+  protected readonly toggleLabel = computed(() =>
+    this.canOpenMenu() ? 'Mở menu' : 'Thu gọn menu',
+  );
 
   private readonly toast = viewChild.required(VtoToast);
 

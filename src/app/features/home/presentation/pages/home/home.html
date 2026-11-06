@@ -1,11 +1,186 @@
-<section class="page">
-  <div>
-    <h1>Angular Base</h1>
-    <p class="muted">Khung ứng dụng Angular và VietinOne UI.</p>
+<section class="home">
+  <div class="home__left">
+    <section class="carousel" aria-label="Gợi ý học tập">
+      <div class="carousel__wrapper">
+        <div class="carousel__banner" role="img" [attr.aria-label]="slides[currentSlide()].title">
+          @if (currentSlide() !== 0) {
+            <div class="carousel__message">
+              <h2>{{ slides[currentSlide()].title }}</h2>
+              <span></span>
+              <p>{{ slides[currentSlide()].subtitle }}</p>
+            </div>
+          }
+        </div>
+        <button
+          class="carousel__arrow carousel__arrow--prev"
+          (click)="prevSlide()"
+          aria-label="Slide trước"
+        >
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <button
+          class="carousel__arrow carousel__arrow--next"
+          (click)="nextSlide()"
+          aria-label="Slide tiếp theo"
+        >
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
+      <div class="carousel__dots">
+        @for (slide of slides; track slide.id; let i = $index) {
+          <button
+            [class.active]="currentSlide() === i"
+            (click)="goToSlide(i)"
+            [attr.aria-label]="'Đi tới slide ' + (i + 1)"
+            [attr.aria-current]="currentSlide() === i ? 'true' : null"
+          ></button>
+        }
+      </div>
+    </section>
+    <section class="features" aria-label="Chủ đề học">
+      @for (feature of features; track feature.name) {
+        <button
+          class="feature-card"
+          [class]="'feature-card feature-card--' + feature.color"
+          (click)="
+            selectedCategory.set(selectedCategory() === feature.category ? '' : feature.category)
+          "
+          [attr.aria-pressed]="selectedCategory() === feature.category"
+        >
+          <span class="feature-card__icon material-symbols-outlined">{{ feature.icon }}</span>
+          <strong>{{ feature.name }}</strong
+          ><small>{{ feature.description }}</small>
+        </button>
+      }
+    </section>
+    <section class="lessons">
+      <div class="section-heading">
+        <h2>Bài học hôm nay</h2>
+        <button class="text-link" (click)="selectedCategory.set('')">
+          Gợi ý theo lộ trình HSK 1 <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
+      <div class="lesson-list">
+        @for (lesson of filteredLessons(); track lesson.title) {
+          <article class="lesson">
+            <img class="lesson__image" [src]="lesson.image" [alt]="lesson.alt" />
+            <div class="lesson__content">
+              <h3>{{ lesson.title }}</h3>
+              <div class="tags">
+                <span class="tag tag--primary">HSK 1</span
+                ><span class="tag"
+                  ><span class="material-symbols-outlined">{{ lesson.icon }}</span
+                  >{{ lesson.category }}</span
+                ><span class="tag"
+                  ><span class="material-symbols-outlined">schedule</span>≈
+                  {{ lesson.minutes }} phút</span
+                >
+              </div>
+            </div>
+            <button
+              class="play-button"
+              (click)="activeLesson.set(lesson)"
+              [attr.aria-label]="'Bắt đầu ' + lesson.title"
+            >
+              <span class="material-symbols-outlined">play_arrow</span>
+            </button>
+          </article>
+        } @empty {
+          <p class="empty-state">
+            Bạn đã hoàn thành các bài ôn tập hôm nay. Hãy khám phá bài học tiếp theo nhé!
+          </p>
+        }
+      </div>
+    </section>
   </div>
-  <div class="card">
-    <h2>Bắt đầu phát triển</h2>
-    <p>Thêm màn hình trong pages, khai báo route và cập nhật navigation.ts.</p>
-    <vto-button label="Thử thông báo" symbol="notifications" (clicked)="showNotification()" />
-  </div>
+  <aside class="home__right">
+    <section class="panel progress">
+      <div class="section-heading">
+        <h2>Tiến độ học tập</h2>
+        <button class="text-link" (click)="showProgress.set(!showProgress())">
+          {{ showProgress() ? 'Thu gọn' : 'Xem chi tiết' }}
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
+      <div class="progress__summary">
+        <div
+          class="completion-ring"
+          role="progressbar"
+          aria-label="Tiến độ HSK 1"
+          aria-valuenow="37"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          <strong>37%</strong>
+        </div>
+        <div><span>Hoàn thành</span><strong>HSK 1</strong></div>
+      </div>
+      <div class="stats">
+        <div>
+          <span class="material-symbols-outlined">menu_book</span><strong>12</strong
+          ><small>Bài đã học</small>
+        </div>
+        <div>
+          <span class="material-symbols-outlined">headphones</span><strong>8 giờ</strong
+          ><small>Luyện nghe</small>
+        </div>
+        <div>
+          <span class="material-symbols-outlined">calendar_month</span><strong>5 ngày</strong
+          ><small>Học liên tiếp</small>
+        </div>
+      </div>
+      @if (showProgress()) {
+        <p class="progress__detail">
+          Bạn đã hoàn thành 12/32 bài học HSK 1. Tiếp tục duy trì 15 phút học mỗi ngày nhé!
+        </p>
+      }
+    </section>
+    <section class="panel streak">
+      <h2>Duy trì thói quen học</h2>
+      <div class="streak__badge">🔥 <strong>5 ngày liên tiếp</strong></div>
+      <p>Tuyệt vời! Hãy học tiếp hôm nay nhé.</p>
+      <div class="streak__days">
+        @for (day of days; track day; let i = $index) {
+          <div>
+            <span>{{ day }}</span
+            ><span class="day-circle" [class.done]="i < 5">
+              @if (i < 5) {
+                <span class="material-symbols-outlined">check</span>
+              }
+            </span>
+          </div>
+        }
+      </div>
+    </section>
+    <section class="panel suggestions">
+      <h2><span>⭐</span> Gợi ý cho bạn</h2>
+      @for (suggestion of suggestions; track suggestion.title) {
+        <button class="suggestion" (click)="selectedCategory.set(suggestion.category)">
+          <img [src]="suggestion.image" alt="" /><span>{{ suggestion.title }}</span
+          ><span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      }
+    </section>
+  </aside>
 </section>
+@if (activeLesson(); as lesson) {
+  <div class="lesson-dialog-backdrop" (click)="activeLesson.set(null)">
+    <section
+      class="lesson-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="lesson-title"
+      (click)="$event.stopPropagation()"
+    >
+      <button class="dialog-close" aria-label="Đóng" (click)="activeLesson.set(null)">×</button
+      ><img [src]="lesson.image" [alt]="lesson.alt" /><span class="tag tag--primary"
+        >HSK 1 · {{ lesson.category }}</span
+      >
+      <h2 id="lesson-title">{{ lesson.title }}</h2>
+      <p>
+        Bài học {{ lesson.minutes }} phút đang được chuẩn bị. Cùng TingTing học thêm mỗi ngày nhé!
+      </p>
+      <button class="dialog-button" (click)="activeLesson.set(null)">Quay lại trang chủ</button>
+    </section>
+  </div>
+}

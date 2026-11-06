@@ -5,13 +5,14 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { provideVietinOne } from '@vietinbank/vietinone-ui';
 import { apiUrlInterceptor } from './core/interceptors/api-url.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([apiUrlInterceptor, errorInterceptor])),
+    provideHttpClient(withInterceptors([loadingInterceptor, apiUrlInterceptor, errorInterceptor])),
     provideVietinOne(),
     MessageService,
     ConfirmationService,

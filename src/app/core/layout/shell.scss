@@ -4,10 +4,10 @@
 
 .shell {
   display: grid;
-  grid-template-columns: 256px minmax(0, 1fr);
+  grid-template-columns: 156px minmax(0, 1fr);
   height: 100dvh;
   overflow: hidden;
-  background: linear-gradient(180deg, #f6f3fd 0%, #f3f6ff 50%, #eff8ff 100%);
+  background: #f5f8ff;
   // Both states keep two tracks, otherwise the browser cannot interpolate the width
   transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -20,65 +20,97 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
-    padding: 8px;
+    padding: 12px 8px;
     overflow: hidden;
-  }
-
-  // Hình trang trí mờ ở góc dưới sidebar (Figma: 591x591, x=-295, y=603, opacity 10%)
-  &__decor {
-    position: absolute;
-    bottom: -114px;
-    left: -295px;
-    width: 591px;
-    height: 591px;
-    object-fit: cover;
-    opacity: 0.1;
-    pointer-events: none;
+    border-right: 1px solid #e5ebf5;
+    background: #ffffff;
   }
 
   &__brand {
     position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 12px;
-    height: 66px;
-    padding-inline: 8px;
+    gap: 0;
+    height: 86px;
+    padding-inline: 0;
     overflow: hidden;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 800;
     line-height: 24px;
-    letter-spacing: -0.32px;
     white-space: nowrap;
-    color: #001946;
+    color: #101c3b;
 
     img {
       flex: none;
-      object-fit: cover;
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
     }
   }
 
   &__brand-name {
-    overflow: hidden;
+    margin-top: -1px;
     transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &__menu {
     position: relative;
-    --p-vto-menubar-width: 100%;
-    --p-vto-menubar-padding: 0;
-    --p-vto-menubar-background: transparent;
-    // With no padding, the container's rounded clip would cut the first and last items' corners
-    --p-vto-menubar-border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 12px;
+  }
 
-    ::ng-deep .vto-menubar__label {
-      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  &__menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 38px;
+    padding: 0 12px;
+    overflow: hidden;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: #263454;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+    white-space: nowrap;
+
+    &:hover {
+      background: #edf4ff;
     }
   }
 
-  // Labels fade while the sidebar narrows; the item clips whatever text is left
+  &__menu-item--active {
+    background: #2879ed;
+    color: #ffffff;
+    box-shadow: 0 5px 12px rgba(40, 121, 237, 0.2);
+  }
+
+  &__menu-icon {
+    flex: none;
+    font-size: 20px;
+  }
+
+  &__menu-label {
+    overflow: hidden;
+    font-size: 13px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
   &--collapsed &__brand-name,
-  &--collapsed &__menu ::ng-deep .vto-menubar__label {
+  &--collapsed &__menu-label {
     opacity: 0;
+  }
+
+  &--collapsed &__menu-item {
+    justify-content: center;
+    padding-inline: 0;
   }
 
   &__backdrop {
@@ -98,8 +130,8 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    height: 70px;
-    padding-inline: clamp(12px, 2.5vw, 16px);
+    height: 86px;
+    padding-inline: clamp(16px, 3vw, 32px);
   }
 
   &__lead {
@@ -110,18 +142,22 @@
     min-width: 0;
   }
 
-  &__search {
-    flex: 0 1 350px;
-    min-width: 0;
+  &__menu-toggle {
+    display: none !important;
+  }
 
-    ::ng-deep .p-inputtext {
-      width: 100%;
-      min-width: 0;
-      height: 40px;
-      border-color: transparent;
-      border-radius: 12px;
-      background: #ffffff;
-      font-size: 16px;
+  &__greeting {
+    h1 {
+      margin: 0;
+      color: #101c3b;
+      font-size: clamp(20px, 2vw, 25px);
+      line-height: 1.2;
+    }
+
+    p {
+      margin: 4px 0 0;
+      color: #596989;
+      font-size: 14px;
     }
   }
 
@@ -136,7 +172,8 @@
     position: relative;
     display: inline-flex;
     flex: none;
-    border-radius: 12px;
+    border: 1px solid #e7edf7;
+    border-radius: 50%;
     background: #ffffff;
   }
 
@@ -170,16 +207,16 @@
   &__content {
     flex: 1;
     min-height: 0;
-    padding: 10px clamp(8px, 1.2vw, 16px) clamp(8px, 1.2vw, 16px);
+    padding: 0 clamp(16px, 3vw, 32px) 24px;
   }
 
   &__body {
     height: 100%;
-    padding: clamp(12px, 1.2vw, 16px);
+    padding: 0;
     overflow: auto;
     overscroll-behavior: contain;
-    border-radius: clamp(12px, 1.2vw, 16px);
-    background: #ffffff;
+    border-radius: 0;
+    background: transparent;
   }
 }
 
@@ -195,7 +232,7 @@
     left: 0;
     z-index: 1001;
     width: min(280px, 85vw);
-    background: linear-gradient(180deg, #f6f3fd 0%, #f3f6ff 50%, #eff8ff 100%);
+    background: #ffffff;
     transform: translateX(-100%);
     visibility: hidden;
     // visibility flips at the end of the slide-out, so the closing motion stays visible
@@ -231,24 +268,335 @@
 
   .shell__header {
     gap: 8px;
-    height: 60px;
+    height: 76px;
   }
 
   .shell__lead {
     gap: 8px;
   }
 
+  .shell__menu-toggle {
+    display: inline-flex !important;
+  }
+
   .shell__content {
     padding-top: 0;
+  }
+
+  .shell__greeting p {
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .shell,
   .shell__sidebar,
   .shell__backdrop,
   .shell__brand-name,
-  .shell__menu ::ng-deep .vto-menubar__label {
+  .shell__menu-label {
     transition: none;
+  }
+}
+
+// TingTing dashboard layout.
+.shell {
+  grid-template-columns: 260px minmax(0, 1fr);
+  background: radial-gradient(ellipse at 50% 20%, #fff 30%, #f8faff 100%);
+}
+
+.shell--collapsed {
+  grid-template-columns: 80px minmax(0, 1fr);
+}
+
+.shell__sidebar {
+  padding: 20px 17px;
+  background: #fff;
+}
+
+.shell__brand {
+  flex-direction: row;
+  justify-content: center;
+  height: 67px;
+  gap: 10px;
+  color: #073bb7;
+
+  img {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.shell__brand-name {
+  font-size: 27px;
+  font-weight: 850;
+  letter-spacing: -0.8px;
+
+  small {
+    display: block;
+    color: #3d5281;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: 0;
+  }
+}
+
+.shell__menu {
+  margin-top: 25px;
+  gap: 4px;
+}
+
+.shell__menu-item {
+  min-height: 50px;
+  gap: 24px;
+  padding: 0 27px;
+  border-radius: 11px;
+  color: #101735;
+
+  &:nth-child(7) {
+    margin-top: 23px;
+    position: relative;
+    overflow: visible;
+
+    &::before {
+      content: '';
+      height: 1px;
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      top: -15px;
+      background: #d6e0f2;
+    }
+  }
+}
+
+.shell__menu-icon {
+  font-size: 27px;
+  color: #485f94;
+}
+
+.shell__menu-label {
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.shell__menu-item--active {
+  background: #075aff;
+  color: #fff;
+
+  .shell__menu-icon {
+    color: white;
+  }
+
+  &:hover {
+    background: #0750e3;
+  }
+}
+
+.shell__header {
+  height: 98px;
+  padding: 0 20px 0 38px;
+}
+
+.shell__greeting h1 {
+  font-size: 28px;
+  color: #090f30;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+}
+
+.shell__greeting p {
+  font-size: 17px;
+  color: #344b7d;
+}
+
+.shell__content {
+  padding: 0 20px 30px 38px;
+}
+
+.shell__actions {
+  gap: 27px;
+}
+
+.shell__avatar {
+  width: 48px;
+  height: 48px;
+}
+
+.shell__action {
+  width: 47px;
+  height: 47px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 17px;
+  box-shadow: 0 2px 5px #173c760a;
+}
+
+.shell__search {
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 10px;
+  width: clamp(230px, 23vw, 376px);
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #d2ddf1;
+  border-radius: 17px;
+  background: #ffffff90;
+  color: #486094;
+
+  input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #253d70;
+    font: inherit;
+    font-size: 14px;
+
+    &::placeholder {
+      color: #486094;
+    }
+  }
+
+  &:focus-within {
+    outline: 2px solid #8cb0ff;
+  }
+}
+
+.shell__search-results {
+  position: absolute;
+  z-index: 10;
+  top: 55px;
+  right: 0;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #dce5f4;
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 10px 30px #173c7620;
+
+  strong {
+    font-size: 13px;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 12px;
+    padding: 8px 0;
+    border: 0;
+    background: white;
+    color: #075aff;
+    text-align: left;
+    cursor: pointer;
+  }
+}
+
+.shell--collapsed .shell__brand {
+  justify-content: flex-start;
+}
+
+.shell--collapsed .shell__brand img {
+  width: 44px;
+}
+
+.shell--collapsed .shell__brand-name {
+  display: none;
+}
+
+@media (max-width: 1439px) {
+  .shell__greeting h1 {
+    font-size: 24px;
+  }
+
+  .shell__greeting p {
+    font-size: 14px;
+  }
+
+  .shell__actions {
+    gap: 15px;
+  }
+
+  .shell__header {
+    padding-left: 26px;
+  }
+
+  .shell__content {
+    padding-left: 26px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .shell__menu-toggle {
+    display: inline-flex !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  .shell__search {
+    width: 230px;
+  }
+
+  .shell__greeting p {
+    max-width: 340px;
+  }
+}
+
+@media (max-width: 767.98px) {
+
+  .shell,
+  .shell--collapsed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .shell__header {
+    height: 90px;
+    padding: 0 18px;
+  }
+
+  .shell__content {
+    padding: 0 18px 24px;
+  }
+
+  .shell__greeting h1 {
+    font-size: 20px;
+  }
+
+  .shell__search {
+    display: none;
+  }
+
+  .shell__actions {
+    gap: 8px;
+  }
+
+  .shell__avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .shell__action {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+  }
+
+  .shell__sidebar {
+    padding: 20px 17px;
+  }
+}
+
+@media (max-width: 389px) {
+  .shell__greeting h1 {
+    font-size: 17px;
+  }
+
+  .shell__actions>.shell__action {
+    display: none;
   }
 }

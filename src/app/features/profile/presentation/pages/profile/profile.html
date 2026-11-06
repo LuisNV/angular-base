@@ -1,0 +1,196 @@
+<div class="profile-page" [class.profile-page--personal]="activeTab() === 'personal'">
+  <aside class="profile-sidebar">
+    <section class="profile-card panel">
+      <div class="profile-card__cover" aria-hidden="true"></div>
+      <div class="avatar-wrap">
+        <img class="profile-avatar" [src]="avatar()" alt="Ảnh đại diện" /><button
+          class="camera-button"
+          type="button"
+          aria-label="Thay ảnh đại diện"
+          (click)="avatarInput.click()"
+        >
+          <span class="material-symbols-outlined">photo_camera</span></button
+        ><input #avatarInput type="file" accept="image/*" hidden (change)="changeAvatar($event)" />
+      </div>
+      <h2>{{ profile.name }}</h2>
+      <p>{{ profile.email }}</p>
+      <span class="membership-badge"
+        ><span class="material-symbols-outlined">crown</span>Thành viên miễn phí</span
+      >
+      <button class="outline-button upgrade-button" (click)="activeTab.set('membership')">
+        <span class="crown">👑</span>Nâng cấp Premium
+      </button>
+    </section>
+    <nav class="profile-nav panel" aria-label="Cài đặt tài khoản">
+      @for (tab of tabs; track tab.id) {
+        <button
+          type="button"
+          [class.active]="activeTab() === tab.id"
+          [attr.aria-current]="activeTab() === tab.id ? 'page' : null"
+          (click)="activeTab.set(tab.id)"
+        >
+          <span class="material-symbols-outlined">{{ tab.icon }}</span
+          >{{ tab.label }}
+        </button>
+      }
+    </nav>
+  </aside>
+  <div class="profile-content">
+    @if (notice()) {
+      <div class="notice" role="status">
+        {{ notice() }}<button aria-label="Đóng thông báo" (click)="notice.set('')">×</button>
+      </div>
+    }
+    @if (activeTab() === 'personal') {
+      <section class="panel information">
+        <div class="panel-heading">
+          <div>
+            <h2>Thông tin cá nhân</h2>
+            <p>Cập nhật thông tin để cá nhân hóa trải nghiệm học tập.</p>
+          </div>
+          @if (!editing()) {
+            <button class="outline-button" (click)="edit()">
+              <span class="material-symbols-outlined">edit</span>Chỉnh sửa
+            </button>
+          }
+        </div>
+        @if (editing()) {
+          <form class="edit-form" (ngSubmit)="save()">
+            <label
+              >Họ và tên<input name="name" [(ngModel)]="draft.name" required maxlength="100"
+            /></label>
+            <label
+              >Email<input name="email" type="email" [(ngModel)]="draft.email" required
+            /></label>
+            <label>Số điện thoại<input name="phone" type="tel" [(ngModel)]="draft.phone" /></label>
+            <label
+              >Ngày sinh<input name="birthday" type="date" [(ngModel)]="draft.birthday" required
+            /></label>
+            <label
+              >Giới tính<select name="gender" [(ngModel)]="draft.gender">
+                <option>Nam</option>
+                <option>Nữ</option>
+                <option>Khác</option>
+              </select></label
+            >
+            <label>Khu vực<input name="region" [(ngModel)]="draft.region" /></label>
+            <div class="form-actions">
+              <button type="button" class="outline-button" (click)="editing.set(false)">Hủy</button
+              ><button class="primary-button" type="submit">Lưu thay đổi</button>
+            </div>
+          </form>
+        } @else {
+          <dl class="details">
+            <div>
+              <dt><span class="material-symbols-outlined">person</span>Họ và tên</dt>
+              <dd>{{ profile.name }}</dd>
+            </div>
+            <div>
+              <dt><span class="material-symbols-outlined">mail</span>Email</dt>
+              <dd>
+                {{ profile.email
+                }}<span class="verified"
+                  ><span class="material-symbols-outlined">check_circle</span>Đã xác thực</span
+                >
+              </dd>
+            </div>
+            <div>
+              <dt><span class="material-symbols-outlined">call</span>Số điện thoại</dt>
+              <dd>{{ profile.phone }}</dd>
+            </div>
+            <div>
+              <dt><span class="material-symbols-outlined">calendar_today</span>Ngày sinh</dt>
+              <dd>{{ birthday() }}</dd>
+            </div>
+            <div>
+              <dt><span class="material-symbols-outlined">male</span>Giới tính</dt>
+              <dd>
+                {{ profile.gender
+                }}<button class="row-edit" aria-label="Sửa giới tính" (click)="edit()">
+                  <span class="material-symbols-outlined">expand_more</span>
+                </button>
+              </dd>
+            </div>
+            <div>
+              <dt><span class="material-symbols-outlined">location_on</span>Khu vực</dt>
+              <dd>
+                {{ profile.region
+                }}<button class="row-edit" aria-label="Sửa khu vực" (click)="edit()">
+                  <span class="material-symbols-outlined">expand_more</span>
+                </button>
+              </dd>
+            </div>
+          </dl>
+        }
+      </section>
+    }
+    @if (activeTab() === 'personal' || activeTab() === 'security') {
+      <section class="panel security">
+        <h2>Bảo mật tài khoản</h2>
+        <p>Quản lý mật khẩu và các phương thức bảo mật cho tài khoản.</p>
+        <button
+          class="security-row"
+          (click)="passwordOpen.set(!passwordOpen())"
+          [attr.aria-expanded]="passwordOpen()"
+        >
+          <span class="material-symbols-outlined security-icon">lock</span
+          ><span
+            ><strong>Đổi mật khẩu</strong
+            ><small>Cập nhật mật khẩu để bảo vệ tài khoản.</small></span
+          ><span class="material-symbols-outlined">chevron_right</span>
+        </button>
+        @if (passwordOpen()) {
+          <p class="security-note" role="status">
+            Tính năng đổi mật khẩu sẽ khả dụng khi kết nối dịch vụ tài khoản.
+          </p>
+        }
+        <div class="security-row">
+          <span class="material-symbols-outlined security-icon">verified_user</span
+          ><span><strong>Xác thực email</strong><small>Email đã được xác thực.</small></span
+          ><span class="verified"
+            ><span class="material-symbols-outlined">check_circle</span>Đã xác thực</span
+          ><span class="material-symbols-outlined">chevron_right</span>
+        </div>
+      </section>
+    }
+    @if (activeTab() === 'membership') {
+      <section class="panel extra-panel">
+        <span class="extra-icon">👑</span>
+        <h2>Gói thành viên</h2>
+        <p>Bạn đang sử dụng gói miễn phí.</p>
+        <div class="plan">
+          <h3>TingTing Premium</h3>
+          <p>Khám phá trọn bộ bài học, luyện nghe và lộ trình học tiếng Trung.</p>
+          <span class="membership-badge">Sắp ra mắt</span>
+        </div>
+      </section>
+    }
+    @if (activeTab() === 'notifications') {
+      <section class="panel extra-panel">
+        <h2>Thông báo</h2>
+        <p>Tùy chỉnh thông báo cho hành trình học tập của bạn.</p>
+        <label class="preference"
+          ><span>Nhắc nhở học hằng ngày</span
+          ><input
+            type="checkbox"
+            [checked]="reminder()"
+            (change)="reminder.set($any($event.target).checked)" /></label
+        ><label class="preference"
+          ><span>Tin tức và bài học mới</span
+          ><input
+            type="checkbox"
+            [checked]="notifications()"
+            (change)="notifications.set($any($event.target).checked)"
+        /></label>
+      </section>
+    }
+    @if (activeTab() === 'settings') {
+      <section class="panel extra-panel">
+        <h2>Cài đặt</h2>
+        <p>Cá nhân hóa trải nghiệm của bạn trên TingTing.</p>
+        <div class="preference"><span>Ngôn ngữ hiển thị</span><strong>Tiếng Việt</strong></div>
+        <div class="preference"><span>Trình độ đang học</span><strong>HSK 1</strong></div>
+      </section>
+    }
+  </div>
+</div>

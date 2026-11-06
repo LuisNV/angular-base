@@ -1,22 +1,26 @@
-<div
-  class="shell"
-  [class.shell--collapsed]="isCollapsed()"
-  [class.shell--menu-open]="menuOpen()"
->
+<div class="shell" [class.shell--collapsed]="isCollapsed()" [class.shell--menu-open]="menuOpen()">
   <aside class="shell__sidebar">
-    <img class="shell__decor" src="images/sidebar-decor.png" alt="" width="591" height="591" />
     <div class="shell__brand">
-      <img src="images/app-logo.png" alt="" width="40" height="40" />
-      <span class="shell__brand-name">Angular Base</span>
+      <img src="images/logoTingTing.png" alt="TingTing" width="72" height="72" />
+      <div class="shell__brand-name">TingTing<small>Học tiếng Trung</small></div>
     </div>
-    <vto-menubar
-      class="shell__menu"
-      ariaLabel="Điều hướng chính"
-      [groups]="groups"
-      [activeId]="activeId()"
-      [tooltip]="isCollapsed()"
-      (itemSelect)="navigate($event)"
-    />
+    <nav class="shell__menu" aria-label="Điều hướng chính">
+      @for (group of groups; track group.id) {
+        @for (item of group.items; track item.id) {
+          <button
+            class="shell__menu-item"
+            [class.shell__menu-item--active]="activeId() === item.id"
+            type="button"
+            (click)="navigate(item)"
+          >
+            <span class="shell__menu-icon material-symbols-outlined" aria-hidden="true">{{
+              item.symbol
+            }}</span>
+            <span class="shell__menu-label">{{ item.label }}</span>
+          </button>
+        }
+      }
+    </nav>
   </aside>
 
   <div class="shell__backdrop" aria-hidden="true" (click)="closeMenu()"></div>
@@ -24,7 +28,7 @@
   <div class="shell__main" [inert]="menuOpen()">
     <header class="shell__header">
       <div class="shell__lead">
-        <span class="shell__action">
+        <span class="shell__action shell__menu-toggle">
           <vto-button
             appearance="text"
             sizeMode="small"
@@ -33,25 +37,47 @@
             (clicked)="toggleMenu()"
           />
         </span>
-        <vto-input
-          class="shell__search"
-          type="search"
-          labelMode="none"
-          placeholder="Tìm kiếm"
-          prefixSymbol="search"
-          [attr.aria-label]="'Tìm kiếm'"
-        />
+        <div class="shell__greeting">
+          <h1>{{ activeId() === 'profile' ? 'Cá nhân' : 'Chào bạn, Thành 👋' }}</h1>
+          <p>
+            {{
+              activeId() === 'profile'
+                ? 'Quản lý thông tin tài khoản và theo dõi quá trình học tập của bạn.'
+                : 'Tiếp tục hành trình chinh phục tiếng Trung cùng TingTing nhé!'
+            }}
+          </p>
+        </div>
       </div>
 
       <div class="shell__actions">
+        <label class="shell__search"
+          ><span class="material-symbols-outlined" aria-hidden="true">search</span
+          ><input
+            type="search"
+            aria-label="Tìm bài học, từ vựng, chủ đề"
+            placeholder="Tìm bài học, từ vựng, chủ đề..."
+            (input)="searchQuery.set($any($event.target).value)"
+          />
+          @if (searchQuery().trim()) {
+            <div class="shell__search-results">
+              <strong>Kết quả tìm kiếm</strong
+              ><button type="button" (click)="openSearchResult()">
+                Bài học HSK 1 · {{ searchQuery()
+                }}<span class="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+          }
+        </label>
         <span class="shell__action">
-          <vto-button appearance="text" sizeMode="small" symbol="notifications" [attr.title]="'Thông báo'" />
+          <vto-button
+            appearance="text"
+            sizeMode="small"
+            symbol="notifications_none"
+            [attr.title]="'Thông báo'"
+          />
           @if (unreadCount()) {
             <span class="shell__badge" aria-hidden="true">{{ unreadCount() }}</span>
           }
-        </span>
-        <span class="shell__action">
-          <vto-button appearance="text" sizeMode="small" symbol="apps" [attr.title]="'Ứng dụng'" />
         </span>
         <img class="shell__avatar" src="images/avatar.png" alt="Tài khoản" width="40" height="40" />
       </div>

@@ -15,6 +15,10 @@ export class HttpAuthRepository extends AuthRepository {
     if (typeof response?.accessToken !== 'string' || !response.accessToken.trim()) {
       throw new Error('Phản hồi đăng nhập không hợp lệ.');
     }
-    return { accessToken: response.accessToken };
+    return { accessToken: response.accessToken, refreshToken: response.refreshToken };
+  }
+
+  override async logout(refreshToken: string): Promise<void> {
+    await this.api.logout(refreshToken);
   }
 }

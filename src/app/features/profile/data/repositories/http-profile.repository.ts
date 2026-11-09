@@ -18,6 +18,8 @@ export class HttpProfileRepository extends ProfileRepository {
       email: response.email,
       address: response.address,
       phoneNumber: response.phone,
+      birthday: response.dateOfBirth,
+      gender: response.gender ?? '',
     };
   }
 }

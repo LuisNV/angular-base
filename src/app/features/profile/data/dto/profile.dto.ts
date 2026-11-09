@@ -4,4 +4,6 @@ export interface ProfileResponseDto {
     email: string;
     phone: string;
     address: string;
+    dateOfBirth: string;
+    gender: string;
 }

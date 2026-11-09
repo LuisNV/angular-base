@@ -27,7 +27,7 @@ export const routes: Routes = [
       {
         path: 'profile',
         title: 'Hồ sơ',
-        providers: provideProfile(),
+        providers: [...provideProfile(), ...provideAuth()],
         loadComponent: () =>
           import('./features/profile/presentation/pages/profile/profile').then((m) => m.Profile),
       },

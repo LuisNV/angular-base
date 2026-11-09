@@ -9,4 +9,6 @@ export interface Profile {
     readonly role?: string;
     readonly address: string;
     readonly phoneNumber: string;
+    readonly birthday: string;
+    readonly gender: string;
 }

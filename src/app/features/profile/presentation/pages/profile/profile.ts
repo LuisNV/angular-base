@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../../../core/services/auth.service';
 import { LoadingService } from '../../../../../core/services/loading.service';
 import { ProfileUseCase } from '../../../domain/use-case/profile.use-case';
+import { LogoutUseCase } from '../../../../auth/domain/use-cases/logout.use-case';
+
 
 @Component({
   selector: 'app-profile',
@@ -20,15 +24,18 @@ export class Profile {
   readonly reminder = signal(true);
   private readonly loading = inject(LoadingService);
   private readonly profileUseCase = inject(ProfileUseCase);
-  profile = {
-    name: 'Nguyễn Văn Thành',
-    email: 'thanh.nguyen@example.com',
-    phone: '090 123 4567',
-    birthday: '1999-06-15',
-    gender: 'Nam',
-    region: 'Hà Nội',
-  };
-  draft = { ...this.profile };
+  private readonly logoutUseCase = inject(LogoutUseCase);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+  readonly profile = signal({
+    name: '',
+    email: '',
+    phone: '',
+    birthday: '',
+    gender: '',
+    region: '',
+  });
+  draft = { ...this.profile() };
   readonly tabs = [
     { id: 'personal', icon: 'person', label: 'Thông tin cá nhân' },
     { id: 'security', icon: 'lock', label: 'Bảo mật tài khoản' },
@@ -36,12 +43,18 @@ export class Profile {
     { id: 'notifications', icon: 'notifications', label: 'Thông báo' },
     { id: 'settings', icon: 'settings', label: 'Cài đặt' },
   ];
+  async logout(): Promise<void> {
+    await this.logoutUseCase.execute(this.auth.getRefreshToken() ?? '');
+    this.auth.clearSession();
+    void this.router.navigateByUrl('/login', { replaceUrl: true });
+  }
+
   edit(): void {
-    this.draft = { ...this.profile };
+    this.draft = { ...this.profile() };
     this.editing.set(true);
   }
   save(): void {
-    this.profile = { ...this.draft };
+    this.profile.set({ ...this.draft });
     this.editing.set(false);
     this.notice.set('Đã cập nhật thông tin trong phiên này.');
   }
@@ -57,23 +70,34 @@ export class Profile {
     reader.readAsDataURL(file);
   }
   birthday(): string {
-    return this.profile.birthday.split('-').reverse().join('/');
+    const value = this.profile().birthday;
+    if (!value) return 'Chưa cập nhật';
+    const [year, month, day] = value.split('-');
+    return `${day}/${month}/${year}`;
+  }
+  genderLabel(): string {
+    switch (this.profile().gender) {
+      case 'MALE': return 'Nam';
+      case 'FEMALE': return 'Nữ';
+      case 'OTHER': return 'Khác';
+      default: return 'Chưa cập nhật';
+    }
   }
   async ngOnInit(): Promise<void> {
     const finish = this.loading.show();
     try {
       const profile = await this.profileUseCase.execute();
-      this.profile = {
+      this.profile.set({
         name: profile.name,
         email: profile.email,
         phone: profile.phoneNumber,
-        birthday: "22/02/1998",
-        gender: 'Nam',
+        birthday: profile.birthday?.split('T')[0] ?? '',
+        gender: profile.gender ?? '',
         region: profile.address,
-      };
-      this.draft = { ...this.profile };
+      });
+      this.draft = { ...this.profile() };
     } catch {
-
+      this.notice.set('Không thể tải thông tin cá nhân. Vui lòng thử lại.');
     } finally {
       finish();
     }

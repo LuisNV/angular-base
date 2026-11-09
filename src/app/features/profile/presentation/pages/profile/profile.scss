@@ -1,6 +1,6 @@
 :host {
   display: block;
-  color: #0b1232;
+  color: var(--app-profile-text);
 }
 
 button,
@@ -16,7 +16,7 @@ button {
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 3px solid #99baff;
+  outline: 3px solid var(--app-profile-focus);
   outline-offset: 3px;
 }
 
@@ -34,7 +34,7 @@ h2 {
 }
 
 p {
-  color: #3c5385;
+  color: var(--app-profile-text-secondary);
   font-size: 17px;
   line-height: 1.5;
 }
@@ -47,10 +47,10 @@ p {
 }
 
 .panel {
-  border: 1px solid #dce6fc;
+  border: 1px solid var(--app-profile-panel-border);
   border-radius: 22px;
-  background: #ffffffa6;
-  box-shadow: 0 3px 7px #244f9c06;
+  background: var(--app-profile-panel-background);
+  box-shadow: 0 3px 7px var(--app-profile-panel-shadow);
 }
 
 .profile-sidebar,
@@ -125,10 +125,10 @@ p {
   display: block;
   width: 168px;
   height: 168px;
-  border: 7px solid white;
+  border: 7px solid var(--app-surface);
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 4px 10px #1b4b9b13;
+  box-shadow: 0 4px 10px var(--app-avatar-shadow);
 }
 
 .camera-button {
@@ -140,10 +140,10 @@ p {
   display: grid;
   place-items: center;
   border: 0;
-  background: white;
+  background: var(--app-surface);
   border-radius: 50%;
-  color: #435b8c;
-  box-shadow: 0 4px 8px #244f9c20;
+  color: var(--app-profile-icon);
+  box-shadow: 0 4px 8px var(--app-camera-shadow);
 
   span {
     font-size: 29px;
@@ -167,8 +167,8 @@ p {
   gap: 8px;
   padding: 7px 16px;
   border-radius: 24px;
-  background: #dfebff;
-  color: #005bff;
+  background: var(--app-accent-background);
+  color: var(--app-profile-accent);
   font-size: 17px;
   font-weight: 650;
 }
@@ -185,18 +185,28 @@ p {
   gap: 9px;
   min-height: 46px;
   padding: 8px 22px;
-  border: 1px solid #065cff;
+  border: 1px solid var(--app-button-primary);
   border-radius: 16px;
   background: transparent;
-  color: #005bff;
+  color: var(--app-profile-accent);
   font-weight: 650;
   font-size: 17px;
   white-space: nowrap;
 }
 
 .primary-button {
-  background: #065cff;
-  color: white;
+  background: var(--app-button-primary);
+  color: var(--app-surface);
+}
+
+.logout-button {
+  margin-top: 24px;
+  border-color: var(--app-danger);
+  color: var(--app-danger);
+
+  &:hover {
+    background: var(--app-danger-background);
+  }
 }
 
 .upgrade-button {
@@ -223,27 +233,27 @@ p {
     border-radius: 12px;
     background: transparent;
     padding: 9px 18px;
-    color: #0b1232;
+    color: var(--app-profile-text);
     text-align: left;
     font-size: 17px;
     font-weight: 650;
 
     .material-symbols-outlined {
-      color: #435b8c;
+      color: var(--app-profile-icon);
       font-size: 30px;
     }
 
     &.active {
-      color: #005bff;
-      background: #e0ebff;
+      color: var(--app-profile-accent);
+      background: var(--app-profile-navigation-active);
 
       .material-symbols-outlined {
-        color: #005bff;
+        color: var(--app-profile-accent);
       }
     }
 
     &:hover {
-      background: #edf3ff;
+      background: var(--app-profile-navigation-hover);
     }
   }
 }
@@ -275,7 +285,7 @@ p {
     padding: 10px 10px 10px 20px;
 
     &:not(:last-child) {
-      border-bottom: 1px solid #dce4f3;
+      border-bottom: 1px solid var(--app-profile-divider);
     }
   }
 
@@ -283,7 +293,7 @@ p {
     display: flex;
     align-items: center;
     gap: 26px;
-    color: #405683;
+    color: var(--app-profile-label);
     font-size: 18px;
     font-weight: 550;
 
@@ -310,9 +320,9 @@ p {
   align-items: center;
   gap: 6px;
   padding: 7px 15px;
-  background: #e0f8ed;
+  background: var(--app-success-background);
   border-radius: 25px;
-  color: #00a34b;
+  color: var(--app-verified);
   font-size: 14px;
   font-weight: 650;
   white-space: nowrap;
@@ -330,7 +340,7 @@ p {
   margin-left: auto;
   border: 0;
   background: transparent;
-  color: #3c5385;
+  color: var(--app-profile-text-secondary);
 }
 
 .security {
@@ -350,11 +360,11 @@ p {
   padding: 14px 0 14px 12px;
   border: 0;
   background: transparent;
-  color: #0b1232;
+  color: var(--app-profile-text);
   text-align: left;
 
   &:not(:last-child) {
-    border-bottom: 1px solid #dce4f3;
+    border-bottom: 1px solid var(--app-profile-divider);
   }
 
   >span:nth-child(2) {
@@ -369,23 +379,23 @@ p {
   small {
     display: block;
     margin-top: 4px;
-    color: #3c5385;
+    color: var(--app-profile-text-secondary);
     font-size: 17px;
   }
 
   >.material-symbols-outlined:last-child {
-    color: #3c5385;
+    color: var(--app-profile-text-secondary);
   }
 }
 
 .security-icon {
-  color: #005bff;
+  color: var(--app-profile-accent);
   font-size: 32px;
 }
 
 .security-note {
   padding: 12px;
-  background: #eef4ff;
+  background: var(--app-security-background);
   border-radius: 10px;
 }
 
@@ -399,7 +409,7 @@ p {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    color: #405683;
+    color: var(--app-profile-label);
     font-size: 15px;
   }
 
@@ -407,11 +417,11 @@ p {
   select {
     width: 100%;
     min-height: 43px;
-    border: 1px solid #cfdbef;
+    border: 1px solid var(--app-profile-input-border);
     border-radius: 10px;
     padding: 8px 12px;
-    background: white;
-    color: #0b1232;
+    background: var(--app-surface);
+    color: var(--app-profile-text);
   }
 }
 
@@ -427,8 +437,8 @@ p {
   justify-content: space-between;
   align-items: center;
   padding: 12px 18px;
-  background: #e0f8ed;
-  color: #087742;
+  background: var(--app-success-background);
+  color: var(--app-success-text);
   border-radius: 12px;
 
   button {
@@ -456,9 +466,9 @@ p {
 .plan {
   padding: 24px;
   margin-top: 24px;
-  border: 1px solid #dce6fc;
+  border: 1px solid var(--app-profile-panel-border);
   border-radius: 16px;
-  background: #f3f7ff;
+  background: var(--app-plan-background);
 
   p {
     margin: 10px 0 20px;
@@ -471,13 +481,13 @@ p {
   align-items: center;
   gap: 16px;
   padding: 24px 0;
-  border-bottom: 1px solid #dce4f3;
+  border-bottom: 1px solid var(--app-profile-divider);
   font-size: 16px;
 
   input {
     width: 21px;
     height: 21px;
-    accent-color: #065cff;
+    accent-color: var(--app-button-primary);
   }
 }
 

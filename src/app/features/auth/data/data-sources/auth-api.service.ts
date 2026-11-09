@@ -10,4 +10,7 @@ export class AuthApi {
   login(body: LoginRequestDto): Promise<LoginResponseDto> {
     return firstValueFrom(this.api.post<LoginResponseDto>('/auth/login', body));
   }
+  logout(refreshToken: string): Promise<void> {
+    return firstValueFrom(this.api.post<void>('auth/logout', { refreshToken }))
+  }
 }

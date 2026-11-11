@@ -11,4 +11,5 @@ export interface Profile {
     readonly phoneNumber: string;
     readonly birthday: string;
     readonly gender: string;
+    readonly emailVerified: boolean;
 }

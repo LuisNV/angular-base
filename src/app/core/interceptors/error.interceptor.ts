@@ -18,7 +18,11 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       const message =
         error.error?.message ?? ERROR_MESSAGES[error.status] ?? 'Đã xảy ra lỗi không xác định.';
-      notify.error('Có lỗi xảy ra', message);
+      const isEmailUpdateError = req.method === 'PUT'
+        && /(?:^|\/)users\/me(?:[?#]|$)/.test(req.url)
+        && ((error.status === 409 && [1001, 1003].includes(error.error?.code))
+          || (error.status === 400 && error.error?.code === 1002));
+      if (!isEmailUpdateError) notify.error('Có lỗi xảy ra', message);
       return throwError(() => error);
     }),
   );

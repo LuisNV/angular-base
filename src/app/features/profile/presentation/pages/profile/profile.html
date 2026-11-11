@@ -25,11 +25,6 @@
     </nav>
   </aside>
   <div class="profile-content">
-    @if (notice()) {
-    <div class="notice" role="status">
-      {{ notice() }}<button aria-label="Đóng thông báo" (click)="notice.set('')">×</button>
-    </div>
-    }
     @if (activeTab() === 'personal') {
     <section class="panel information">
       <div class="panel-heading">
@@ -46,7 +41,12 @@
       @if (editing()) {
       <form class="edit-form" (ngSubmit)="save()">
         <label>Họ và tên<input name="name" [(ngModel)]="draft.name" required maxlength="100" /></label>
-        <label>Email<input name="email" type="email" [(ngModel)]="draft.email" required /></label>
+        <label>Email<input name="email" type="email" [(ngModel)]="draft.email" (ngModelChange)="emailError.set('')"
+            [attr.aria-invalid]="emailError() ? true : null"
+            [attr.aria-describedby]="emailError() ? 'profile-email-error' : null" required />
+          @if (emailError()) { <small id="profile-email-error" class="field-error" role="alert">{{ emailError()
+            }}</small> }
+        </label>
         <label>Số điện thoại<input name="phone" type="tel" [(ngModel)]="draft.phone" /></label>
         <label>Ngày sinh<input name="birthday" type="date" [(ngModel)]="draft.birthday" required /></label>
         <label>Giới tính<select name="gender" [(ngModel)]="draft.gender">
@@ -58,7 +58,7 @@
         <label>Khu vực<input name="region" [(ngModel)]="draft.region" /></label>
         <div class="form-actions">
           <button type="button" class="outline-button" (click)="editing.set(false)">Hủy</button><button
-            class="primary-button" type="submit">Lưu thay đổi</button>
+            class="primary-button" type="submit" [disabled]="saving()">Lưu thay đổi</button>
         </div>
       </form>
       } @else {
@@ -71,7 +71,10 @@
           <dt><span class="material-symbols-outlined">mail</span>Email</dt>
           <dd>
             {{ profile().email
-            }}<span class="verified"><span class="material-symbols-outlined">check_circle</span>Đã xác thực</span>
+            }}<span class="verified" [class.unverified]="!profile().emailVerified">
+              <span class="material-symbols-outlined">{{ profile().emailVerified ? 'check_circle' : 'info' }}</span>
+              {{ profile().emailVerified ? 'Đã xác thực' : 'Chưa xác thực' }}
+            </span>
           </dd>
         </div>
         <div>
@@ -115,9 +118,12 @@
       }
       <div class="security-row">
         <span class="material-symbols-outlined security-icon">verified_user</span><span><strong>Xác thực
-            email</strong><small>Email đã được xác thực.</small></span><span class="verified"><span
-            class="material-symbols-outlined">check_circle</span>Đã xác thực</span><span
-          class="material-symbols-outlined">chevron_right</span>
+            email</strong><small>{{ profile().emailVerified ? 'Email đã được xác thực.' : 'Email chưa được xác thực.'
+            }}</small></span>
+        <span class="verified" [class.unverified]="!profile().emailVerified">
+          <span class="material-symbols-outlined">{{ profile().emailVerified ? 'check_circle' : 'info' }}</span>
+          {{ profile().emailVerified ? 'Đã xác thực' : 'Chưa xác thực' }}
+        </span><span class="material-symbols-outlined">chevron_right</span>
       </div>
     </section>
     }
@@ -157,3 +163,21 @@
     }
   </div>
 </div>
+<p-dialog header="Xác nhận đổi email" [visible]="emailPasswordOpen()" (visibleChange)="closeEmailPassword()"
+  [modal]="true" [closable]="!saving()" [closeOnEscape]="!saving()"
+  [style]="{ width: '420px', maxWidth: 'calc(100vw - 32px)' }">
+  <form class="email-password-form" (ngSubmit)="save()">
+    <label for="email-password">Mật khẩu hiện tại</label>
+    <input id="email-password" name="emailPassword" type="password" autocomplete="current-password"
+      [(ngModel)]="emailPassword" (ngModelChange)="passwordError.set('')"
+      [attr.aria-invalid]="passwordError() ? true : null"
+      [attr.aria-describedby]="passwordError() ? 'email-password-error' : null" required />
+    @if (passwordError()) {
+    <small id="email-password-error" class="field-error" role="alert">{{ passwordError() }}</small>
+    }
+    <div class="form-actions">
+      <button type="button" class="outline-button" [disabled]="saving()" (click)="closeEmailPassword()">Hủy</button>
+      <button type="submit" class="primary-button" [disabled]="saving() || !emailPassword">Xác nhận và lưu</button>
+    </div>
+  </form>
+</p-dialog>

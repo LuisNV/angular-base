@@ -4,6 +4,7 @@ import { defer, finalize, map, Observable, shareReplay } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthSession } from '../../features/auth/domain/models/auth.models';
 import { AuthService } from './auth.service';
+import { ApiResponse } from '../models/api-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class TokenRefreshService {
@@ -18,11 +19,12 @@ export class TokenRefreshService {
       const refreshToken = this.auth.getRefreshToken();
       this.pending = defer(() => {
         if (!refreshToken) throw new Error('Phiên đăng nhập đã hết hạn.');
-        return this.http.post<AuthSession>(
+        return this.http.post<ApiResponse<AuthSession>>(
           `${environment.apiUrl.replace(/\/$/, '')}/auth/refresh`,
           { refreshToken },
         );
       }).pipe(
+        map(response => response.data),
         map((session) => {
           if (this.auth.getAccessToken() !== accessToken ||
             this.auth.getRefreshToken() !== refreshToken) {

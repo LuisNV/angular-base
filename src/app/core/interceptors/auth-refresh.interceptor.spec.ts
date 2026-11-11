@@ -48,7 +48,7 @@ describe('refreshing expired sessions', () => {
     const refresh = requests.expectOne(`${base}/auth/refresh`);
     expect(refresh.request.body).toEqual({ refreshToken: 'refresh-old' });
     expect(refresh.request.headers.has('Authorization')).toBe(false);
-    refresh.flush({ accessToken: 'new', refreshToken: 'refresh-new' });
+    refresh.flush({ code: 0, httpStatus: 200, message: 'Success', data: { accessToken: 'new', refreshToken: 'refresh-new' }, traceId: 'trace-refresh' });
     for (const path of ['/auth/me', '/lessons']) {
       const retry = requests.expectOne(`${base}${path}`);
       expect(retry.request.headers.get('Authorization')).toBe('Bearer new');
@@ -78,7 +78,7 @@ describe('refreshing expired sessions', () => {
     const error = vi.fn();
     http.get('/auth/me').subscribe({ error });
     reject('/auth/me');
-    requests.expectOne(`${base}/auth/refresh`).flush({ accessToken: 'new', refreshToken: 'new-r' });
+    requests.expectOne(`${base}/auth/refresh`).flush({ code: 0, httpStatus: 200, message: 'Success', data: { accessToken: 'new', refreshToken: 'new-r' }, traceId: 'trace-refresh' });
     reject('/auth/me');
     requests.expectNone(`${base}/auth/refresh`);
     expect(auth.isAuthenticated()).toBe(false);
@@ -89,7 +89,7 @@ describe('refreshing expired sessions', () => {
     http.get('/auth/me').subscribe({ error: () => {} });
     reject('/auth/me');
     auth.clearSession();
-    requests.expectOne(`${base}/auth/refresh`).flush({ accessToken: 'new', refreshToken: 'new-r' });
+    requests.expectOne(`${base}/auth/refresh`).flush({ code: 0, httpStatus: 200, message: 'Success', data: { accessToken: 'new', refreshToken: 'new-r' }, traceId: 'trace-refresh' });
     expect(auth.isAuthenticated()).toBe(false);
     requests.expectNone(`${base}/auth/me`);
   });
